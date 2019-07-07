@@ -3,19 +3,21 @@ using UnityEngine;
 
 namespace __Scripts
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class MetaData : MonoBehaviour
     {
+        /*
         public int BlocID;
         public Transform junctionEst, junctionOuest;
         public float ChallengeRating = 1;
-        public MetaAugmentingTile[] Additions;
+        public MetaAugmentingTile[] Additions;*/
 
 
         private Vector2 _speedX = new Vector2(50,25);
 
-        private Vector2Int _pointLeft, _pointRight;
+        private Vector2Int _pointLeft = Vector2Int.zero, _pointRight = Vector2Int.zero;
 
-        private float _inertia;
+        private float _inertia = 0.3f;
 
         private float _distance;
 
@@ -40,11 +42,13 @@ namespace __Scripts
 
         private void Start()
         {
+
+            
             // Initialisation, pas de liberté possible
-            _liberty = new Texture2D(500,500,TextureFormat.ARGB32, false);
+            _liberty = new Texture2D(1024,1024,TextureFormat.ARGB32, false);
             for (var x = 0 ; x < _liberty.width ; x++)
             {
-                for (var y = 0 ; y < _liberty.height ; y++) _liberty.SetPixel(x,y, new Color(0,0,0,0.5f));
+                for (var y = 0 ; y < _liberty.height ; y++) _liberty.SetPixel(x,y, new Color(0f,0f,0f,0.5f));
             }
             
             /** TODO: positionner le bloc sur la texture.
@@ -52,29 +56,50 @@ namespace __Scripts
              * Cela permettra de sommer les textures et de n'avoir visible que les degrés de liberté du niveau
              * /!\ lors de la somme, attention à supprimer les projections dépassantes (via une "ombre") 
              */
-            
-            _pointLeft = new Vector2Int(150,150);
-            _pointRight = new Vector2Int(200,175);
-            //var _pointBottom = new Vector2Int(200,150);
-            Vector2 differential = (_pointRight - _pointLeft);
-            var differentialNorm = differential.normalized;
-            
-            for (var x = _pointLeft.x; x < _pointRight.x; x++)
+            var piece = gameObject.GetComponent<SpriteRenderer>().sprite.texture;
+            var w = piece.width;
+            var h = piece.height;
+            var offsetW = (_liberty.width / 2) - (w / 2);
+            var offsetH = (_liberty.height / 2) - (h / 2);
+            for (int i = 0; i < h; i++)
             {
-                for (int y = _pointLeft.y ; y < _pointLeft.y + Mathf.FloorToInt(x * differentialNorm.y) ; y++)
+                for (int j = 0; j < w; j++)
                 {
-                    _liberty.SetPixel(x,y, new Color(0,0,0,0f));
+                    var color = piece.GetPixel(j, i);
+                    if (color.a != 0f)
+                    {
+                        if (_pointLeft == Vector2Int.zero)
+                        {
+                            _pointLeft = new Vector2Int(j,i);
+                        }
+
+                        //_liberty.SetPixel(j + offsetH, i + offsetW, new Color(0,0,0,0f));
+                        _pointRight = new Vector2Int(j,i);
+                    }
                 }
             }
+            _pointLeft+=new Vector2Int(offsetW,offsetH);
             
+            _pointRight+=new Vector2Int(offsetW,offsetH);
+            Debug.Log(_pointLeft);
+            Debug.Log(_pointRight);
+            
+            
+            Vector2 differential = (_pointRight - _pointLeft);
+            var differentialNorm = differential.normalized;
+            Debug.Log(differentialNorm);
+            var pixel = _pointLeft;
             // Libertés basiques au sol
             for (var x = _pointLeft.x; x < _pointRight.x; x++)
             {
-                var pixel = new Vector2Int(x, _pointLeft.y + Mathf.FloorToInt(x * differentialNorm.y));
+                pixel = new Vector2Int(x, _pointLeft.y + Mathf.FloorToInt((x - _pointLeft.x) * differentialNorm.y));
+                
+                
                 var color = _liberty.GetPixel(pixel.x, pixel.y);
                 //liberté gauche et droite
                 color.g += (_speedX.x / 255);
-                color.r += (_speedX.y / 255);
+                color.a = 0f;
+                color.r =1f;//+= (_speedX.y / 255);
                 _liberty.SetPixel(pixel.x, pixel.y, color);
                 
                 //Hauteur du joueur (judicieux? -> calculable à part)
@@ -93,15 +118,15 @@ namespace __Scripts
                     //liberté gauche et droite
                     color2.g += (_speedX.x / 255);
                     color2.r += (_speedX.y / 255);
-                    color2.b += (_jumpingForce/255);
+                    //color2.a += 0.3f; //aff0
                     _liberty.SetPixel(pixel.x, pixel.y + y, color2);
                 }
                 
-                //Todo: Saut directionnel
+                //Todo: Saut directionnel? ajout valeures effectives personnage
                 //Courbe de saut et coloriage
                 var startX = x;
                 var xFunct = startX;
-                var startY = _pointLeft.y + x * differentialNorm.y;
+                float startY = pixel.y-1;
                 var yFunct = startY;
                 var angleDeg = 45;
                 var inc = 0;
@@ -114,9 +139,9 @@ namespace __Scripts
                 {
                     var color2 = _liberty.GetPixel(xFunct, Mathf.FloorToInt(yFunct));
                     if (color2.a == 0f) break;
-                    //color2.g += (_speedX.x / 255);
+                    color2.g += (_speedX.x / 255);
                     //color2.r += (_speedX.y / 255);
-                    color2.b += 50;// (_jumpingForce/255);
+                    //color2.b += 50;// (_jumpingForce/255);
                     _liberty.SetPixel(xFunct, Mathf.FloorToInt(yFunct), color2);
                     xFunct+=inc;
                     yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity / (Mathf.Pow(Mathf.Cos(angle),2)*Mathf.Pow(_jumpingForce,2))) + Mathf.Tan(angle) * (xFunct - startX) + startY;
@@ -124,7 +149,7 @@ namespace __Scripts
 
                 startX = x;
                 xFunct = startX;
-                startY = _pointLeft.y + x * differentialNorm.y;
+                startY = pixel.y-1;
                 yFunct = startY;
                 angleDeg = 135;
                 if (angleDeg > 90) inc = -1;
@@ -137,8 +162,8 @@ namespace __Scripts
                     var color2 = _liberty.GetPixel(xFunct, Mathf.FloorToInt(yFunct));
                     if (color2.a == 0f) break;
                     //color2.g += (_speedX.x / 255);
-                    //color2.r += (_speedX.y / 255);
-                    color2.b += 50;// (_jumpingForce/255);
+                    color2.r += (_speedX.y / 255);
+                    //color2.b += 50;// (_jumpingForce/255);
                     _liberty.SetPixel(xFunct, Mathf.FloorToInt(yFunct), color2);
                     xFunct+=inc;
                     yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity / (Mathf.Pow(Mathf.Cos(angle),2)*Mathf.Pow(_jumpingForce,2))) + Mathf.Tan(angle) * (xFunct - startX) + startY;
@@ -146,6 +171,27 @@ namespace __Scripts
 
                 //Todo: Air Control
                 //Colorier toute l'intégrale avec gauche/droite
+                
+                
+                
+            }
+            
+            //Inertia
+            for (int i = 0; i < Mathf.FloorToInt(_speedX.x * _inertia); i++)
+            {
+                for (int j = 0; j < _pointLeft.y; j++)
+                {
+                    var pix = _liberty.GetPixel(_pointLeft.x - i, j);
+                    pix.b += 0.3f;
+                    _liberty.SetPixel(_pointLeft.x - i,j, pix);
+                }
+
+                for (int j = 0; j < _pointRight.y; j++)
+                {
+                    var pix = _liberty.GetPixel(_pointRight.x + i, j);
+                    pix.b += 0.3f;
+                    _liberty.SetPixel(_pointRight.x + i, j, pix);
+                }
             }
             
             
@@ -153,7 +199,7 @@ namespace __Scripts
             
         }
 
-        private void Update()
+        /*private void Update()
         {
             //TODO: Selon cases autour, adapter difficulté
             Gizmos.color = Color.green;
@@ -163,7 +209,7 @@ namespace __Scripts
             var vDroite = new Vector2();
 
             var curve = vDroite.x * maxJump;
-        }
+        }*/
 
         private void OnGUI()
         {
