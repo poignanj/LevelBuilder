@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2706082640991002340}
-  - component: {fileID: 3464590321913603830}
   m_Layer: 0
   m_Name: Pitfall_Long
   m_TagString: Untagged
@@ -33,25 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3464590321913603830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2706082640991002343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BlocID: 0
-  junctionEst: {fileID: 2549660722959041254}
-  junctionOuest: {fileID: 6184458434148520872}
-  ChallengeRating: 3
-  Additions:
-  - tile: {fileID: 7165680720839606517, guid: c5601d1e13f02ae4f9bb1ebd6c3ce997, type: 3}
-    CR: 2
 --- !u!1001 &2706082640914615106
 PrefabInstance:
   m_ObjectHideFlags: 0

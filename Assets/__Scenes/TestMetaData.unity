@@ -132,11 +132,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass
       objectReference: {fileID: 0}
-    - target: {fileID: 8871949899727187801, guid: e7ce1f8acbbea074499404535a486dd4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8097036718290917610, guid: e7ce1f8acbbea074499404535a486dd4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -261,32 +256,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassHillLeft
       objectReference: {fileID: 0}
-    - target: {fileID: 5476442664575869418, guid: 959c50a42e405a84f93a81fd00832bc6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 959c50a42e405a84f93a81fd00832bc6, type: 3}
---- !u!1 &1298156930 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8871949899727187801, guid: e7ce1f8acbbea074499404535a486dd4,
-    type: 3}
-  m_PrefabInstance: {fileID: 524316331}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1298156934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1298156930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _liberty: {fileID: 0}
 --- !u!1 &1404706373
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,25 +341,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1493148954 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5476442664575869418, guid: 959c50a42e405a84f93a81fd00832bc6,
-    type: 3}
-  m_PrefabInstance: {fileID: 971713846}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1493148955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1493148954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _liberty: {fileID: 0}
 --- !u!1001 &5505999473204693246
 PrefabInstance:
   m_ObjectHideFlags: 0

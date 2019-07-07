@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9039181431697648913}
-  - component: {fileID: 8814161181347420071}
   m_Layer: 0
   m_Name: ClimbRight1
   m_TagString: Untagged
@@ -38,27 +37,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8814161181347420071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4651175200439269319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BlocID: 0
-  junctionEst: {fileID: 5887449105556111663}
-  junctionOuest: {fileID: 8909792956447259655}
-  ChallengeRating: 1
-  Additions:
-  - tile: {fileID: 7165680720839606517, guid: c5601d1e13f02ae4f9bb1ebd6c3ce997, type: 3}
-    CR: 2
-  - tile: {fileID: 1749258434609502570, guid: 32a76e533336d364cb08d60d9da40d9b, type: 3}
-    CR: 1
 --- !u!1001 &41716334908658389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,6 +44,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9039181431697648913}
     m_Modifications:
+    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
+        type: 3}
+      propertyPath: m_Name
+      value: GrassHillLeft2
+      objectReference: {fileID: 0}
     - target: {fileID: 3379708953329059092, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -120,11 +103,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
-        type: 3}
-      propertyPath: m_Name
-      value: GrassHillLeft2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d, type: 3}
@@ -291,6 +269,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9039181431697648913}
     m_Modifications:
+    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
+        type: 3}
+      propertyPath: m_Name
+      value: GrassHillLeft2 (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 3379708953329059092, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -345,11 +328,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
-        type: 3}
-      propertyPath: m_Name
-      value: GrassHillLeft2 (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d, type: 3}
@@ -441,6 +419,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9039181431697648913}
     m_Modifications:
+    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
+        type: 3}
+      propertyPath: m_Name
+      value: GrassHillLeft2 (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 3379708953329059092, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -495,11 +478,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2574147885968150491, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d,
-        type: 3}
-      propertyPath: m_Name
-      value: GrassHillLeft2 (2)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6d18d8a683f36c4dafc9bc4c64cdd2d, type: 3}

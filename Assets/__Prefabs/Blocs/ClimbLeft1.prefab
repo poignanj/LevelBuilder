@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5531318701110320410}
-  - component: {fileID: 1695854078186260209}
   m_Layer: 0
   m_Name: ClimbLeft1
   m_TagString: Untagged
@@ -38,29 +37,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1695854078186260209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314309296418125844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BlocID: 0
-  junctionEst: {fileID: 7874594066371388281}
-  junctionOuest: {fileID: 7378708862784256563}
-  ChallengeRating: 1
-  Additions:
-  - tile: {fileID: 7165680720839606517, guid: c5601d1e13f02ae4f9bb1ebd6c3ce997, type: 3}
-    CR: 1
-  - tile: {fileID: 5062044961144715617, guid: e9888cee25874d345940e8159062250a, type: 3}
-    CR: 3
-  - tile: {fileID: 1749258434609502570, guid: 32a76e533336d364cb08d60d9da40d9b, type: 3}
-    CR: 1
 --- !u!1001 &2095966486810164115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68,6 +44,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5531318701110320410}
     m_Modifications:
+    - target: {fileID: 8871949899727187801, guid: e7ce1f8acbbea074499404535a486dd4,
+        type: 3}
+      propertyPath: m_Name
+      value: Grass
+      objectReference: {fileID: 0}
     - target: {fileID: 8097036718290917610, guid: e7ce1f8acbbea074499404535a486dd4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -122,11 +103,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8871949899727187801, guid: e7ce1f8acbbea074499404535a486dd4,
-        type: 3}
-      propertyPath: m_Name
-      value: Grass
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7ce1f8acbbea074499404535a486dd4, type: 3}

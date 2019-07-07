@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4669604118207722759}
   - component: {fileID: 7464984097320495002}
   - component: {fileID: 1186953715817183192}
+  - component: {fileID: -3740373930625916765}
   m_Layer: 0
   m_Name: GrassHillRight
   m_TagString: Untagged
@@ -111,3 +112,16 @@ PolygonCollider2D:
       - {x: 2.56, y: -2.56}
       - {x: 2.56, y: -2.53}
       - {x: -2.53, y: 2.56}
+--- !u!114 &-3740373930625916765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285160874253239142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9b615e8d6ba65478442597c31ab716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _liberty: {fileID: 0}
