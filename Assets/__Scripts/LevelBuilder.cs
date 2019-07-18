@@ -31,11 +31,10 @@ namespace __Scripts
             }
             mapLiberty = new Texture2D(levelSize * blocSize, 20 * blocSize);
             
-            
-            var blocsArray =Resources.LoadAll<GameObject>("__Prefabs/Blocs");
+            var blocsArray =Resources.LoadAll<GameObject>("__Prefabs/Tiles");
             var blocs = blocsArray.ToList();
             
-            //Difficulté : courbe décroissante de la surface sans danger
+            //Todo: Difficulté : courbe décroissante de la surface sans danger
             // %surface(position) = (1 - CR) * (levelSize - position) / levelSize
             // augmentation croissante de difficulté selon le Challenge Rating
             // 1ère passe
@@ -46,7 +45,7 @@ namespace __Scripts
             {
                 //todo: check surface of blue presence in sector
                 var percentile = .6f;
-                PlaceBloc(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y+1), percentile, Instantiate(blocs[Random.Range(0,blocs.Count)]));
+                PlaceBloc(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y+1), percentile, Instantiate(blocs[Random.Range(0,blocs.Count-1)]));
 
                 pos.y += 1;
                 actualSize++;
@@ -54,7 +53,6 @@ namespace __Scripts
             FillDeathPits();
 
         }
-
 
         private void PlaceBloc(int i, int j, float offset, GameObject bloc)
         {
@@ -86,6 +84,5 @@ namespace __Scripts
                 }
             }
         }
-        
     }
 }

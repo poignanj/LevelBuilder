@@ -21,7 +21,7 @@ namespace __Scripts
 
         private float _distance;
 
-        private float _jumpingForce = 30f;
+        private float _jumpingForce = 60f;
 
         private float _jumpingMaxDistance = 1;
 
@@ -40,18 +40,18 @@ namespace __Scripts
         public Texture2D _liberty;
         private float _gravity = 9.81f;
 
-        private void Start()
+        private void Awake()
         {
 
             
             // Initialisation, pas de liberté possible
             _liberty = new Texture2D(1024,1024,TextureFormat.ARGB32, false);
-            for (var x = 0 ; x < _liberty.width ; x++)
+            for (var xT = 0 ; xT < _liberty.width ; xT++)
             {
-                for (var y = 0 ; y < _liberty.height ; y++) _liberty.SetPixel(x,y, new Color(0f,0f,0f,0.5f));
+                for (var yT = 0 ; yT < _liberty.height ; yT++) _liberty.SetPixel(xT,yT, new Color(0f,0f,0f,0.5f));
             }
             
-            /** TODO: positionner le bloc sur la texture.
+            /** TODO: [BUG] positionner le bloc sur la texture.
              * Colorier le bloc en blanc 100% transparent sur la texture.
              * Cela permettra de sommer les textures et de n'avoir visible que les degrés de liberté du niveau
              * /!\ lors de la somme, attention à supprimer les projections dépassantes (via une "ombre") 
@@ -68,112 +68,136 @@ namespace __Scripts
                     var color = piece.GetPixel(j, i);
                     if (color.a != 0f)
                     {
-                        if (_pointLeft == Vector2Int.zero)
+                        if (i + 1 < h && _pointLeft == Vector2Int.zero)
                         {
-                            _pointLeft = new Vector2Int(j,i);
+                            if (piece.GetPixel(j , i+1).a == 0f)
+                            {
+                                _pointLeft = new Vector2Int(j, i);
+                            }
+                        }else if (i + 1 == h && _pointLeft == Vector2Int.zero)
+                        {
+                            _pointLeft = new Vector2Int(j, i);
                         }
 
                         //_liberty.SetPixel(j + offsetH, i + offsetW, new Color(0,0,0,0f));
+                        //_liberty.SetPixel(j + offsetH, i + offsetW, new Color(i * 1f / h, 0, 0));//j*1f/w,0));
                         _pointRight = new Vector2Int(j,i);
                     }
                 }
             }
-            _pointLeft+=new Vector2Int(offsetW,offsetH);
             
+            _pointLeft+=new Vector2Int(offsetW,offsetH);
             _pointRight+=new Vector2Int(offsetW,offsetH);
             Debug.Log(_pointLeft);
             Debug.Log(_pointRight);
-            
             
             Vector2 differential = (_pointRight - _pointLeft);
             var differentialNorm = differential.normalized;
             Debug.Log(differentialNorm);
             var pixel = _pointLeft;
+            
             // Libertés basiques au sol
-            for (var x = _pointLeft.x; x < _pointRight.x; x++)
+            var saveX = _pointLeft.x;
+            var saveY = _pointLeft.y + 1;
+            var y = saveY + 0f;
+            var x = _pointLeft.x + 0f;
+            while((_pointRight.x < _pointLeft.x && x > _pointRight.x) || (_pointRight.x > _pointLeft.x && x < _pointRight.x))
             {
-                pixel = new Vector2Int(x, _pointLeft.y + Mathf.FloorToInt((x - _pointLeft.x) * differentialNorm.y));
-                
-                
-                var color = _liberty.GetPixel(pixel.x, pixel.y);
-                //liberté gauche et droite
-                color.g += (_speedX.x / 255);
-                color.a = 0f;
-                color.r =1f;//+= (_speedX.y / 255);
-                _liberty.SetPixel(pixel.x, pixel.y, color);
-                
-                //Hauteur du joueur (judicieux? -> calculable à part)
-                for (var y = 0; y < _playerHeight; y++)
+                x += differentialNorm.x;
+                y += differentialNorm.y;
+                if (Mathf.RoundToInt(x) != saveX || Mathf.RoundToInt(y) != saveY)
                 {
-                    var color2 = _liberty.GetPixel(pixel.x, pixel.y + y);
+                    var newX = Mathf.RoundToInt(x + 1f); 
+                    var newY = Mathf.RoundToInt(y + 1f); 
+                    pixel = new Vector2Int(newX, newY);
+
+                    var color = _liberty.GetPixel(pixel.x, pixel.y);
                     //liberté gauche et droite
-                    color2.g += (_speedX.x / 255);
-                    color2.r += (_speedX.y / 255);
-                    _liberty.SetPixel(pixel.x, pixel.y + y, color2);
-                }
-                
-                //Saut statique
-                for(var y = 0; y < _jumpingForce;y++) {
-                    var color2 = _liberty.GetPixel(pixel.x, pixel.y + y);
-                    //liberté gauche et droite
-                    color2.g += (_speedX.x / 255);
-                    color2.r += (_speedX.y / 255);
-                    //color2.a += 0.3f; //aff0
-                    _liberty.SetPixel(pixel.x, pixel.y + y, color2);
-                }
-                
-                //Todo: Saut directionnel? ajout valeures effectives personnage
-                //Courbe de saut et coloriage
-                var startX = x;
-                var xFunct = startX;
-                float startY = pixel.y-1;
-                var yFunct = startY;
-                var angleDeg = 45;
-                var inc = 0;
-                if (angleDeg > 90) inc = -1;
-                else inc = 1;
-                var angle = angleDeg * Mathf.PI/180; //Radians !!
-                
-                //Debug.Log(xFunct+" ::: "+yFunct); //aff0
-                while (xFunct < _liberty.width && xFunct >= 0 && yFunct < _liberty.height && yFunct >=0)
-                {
-                    var color2 = _liberty.GetPixel(xFunct, Mathf.FloorToInt(yFunct));
-                    if (color2.a == 0f) break;
-                    color2.g += (_speedX.x / 255);
-                    //color2.r += (_speedX.y / 255);
-                    //color2.b += 50;// (_jumpingForce/255);
-                    _liberty.SetPixel(xFunct, Mathf.FloorToInt(yFunct), color2);
-                    xFunct+=inc;
-                    yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity / (Mathf.Pow(Mathf.Cos(angle),2)*Mathf.Pow(_jumpingForce,2))) + Mathf.Tan(angle) * (xFunct - startX) + startY;
+                    color.g += (_speedX.x / 255);
+                    color.a = 0f;
+                    color.r = 1f; //+= (_speedX.y / 255);
+                    _liberty.SetPixel(pixel.x, pixel.y, color);
+
+                    //Hauteur du joueur (judicieux? -> calculable à part)
+                    for (var yT = 0; yT < _playerHeight; yT++)
+                    {
+                        var color2 = _liberty.GetPixel(pixel.x, pixel.y + yT);
+                        //liberté gauche et droite
+                        color2.g += (_speedX.x / 255);
+                        color2.r += (_speedX.y / 255);
+                        _liberty.SetPixel(pixel.x, pixel.y + yT, color2);
+                    }
+
+                    //Saut statique
+                    for (var yT= 0; yT < _jumpingForce; yT++)
+                    {
+                        var color2 = _liberty.GetPixel(pixel.x, pixel.y + yT);
+                        //liberté gauche et droite
+                        color2.g += (_speedX.x / 255);
+                        color2.r += (_speedX.y / 255);
+                        //color2.a += 0.3f; //aff0
+                        _liberty.SetPixel(pixel.x, pixel.y + yT, color2);
+                    }
+
+                    //Todo: ajout valeures effectives personnage
+                    //Courbe de saut et coloriage
+                    var startX = pixel.x+1;
+                    var xFunct = startX;
+                    float startY = pixel.y;
+                    var yFunct = startY;
+                    var angleDeg = 45;
+                    var inc = 0;
+                    if (angleDeg > 90) inc = -1;
+                    else inc = 1;
+                    var angle = angleDeg * Mathf.PI / 180; //Radians !!
+
+                    //Debug.Log(xFunct+" ::: "+yFunct); //aff0
+                    while (xFunct < _liberty.width && xFunct >= 0 && yFunct < _liberty.height && yFunct >= 0)
+                    {
+                        var color2 = _liberty.GetPixel(xFunct, Mathf.RoundToInt(yFunct));
+                        if (color2.a == 0f) break;
+                        color2.g += (_speedX.x / 255);
+                        //color2.r += (_speedX.y / 255);
+                        //color2.b += 50;// (_jumpingForce/255);
+                        _liberty.SetPixel(xFunct, Mathf.RoundToInt(yFunct), color2);
+                        xFunct += inc;
+                        yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity /
+                                          (Mathf.Pow(Mathf.Cos(angle), 2) * Mathf.Pow(_jumpingForce, 2))) +
+                                 Mathf.Tan(angle) * (xFunct - startX) + startY;
+                    }
+
+                    startX = pixel.x+1;
+                    xFunct = startX;
+                    startY = pixel.y;
+                    yFunct = startY;
+                    angleDeg = 135;
+                    if (angleDeg > 90) inc = -1;
+                    else inc = 1;
+                    angle = angleDeg * Mathf.PI / 180; //Radians !!
+
+                    //Debug.Log(xFunct+" ::: "+yFunct); //aff0
+                    while (xFunct < _liberty.width && xFunct >= 0 && yFunct < _liberty.height && yFunct >= 0)
+                    {
+                        var color2 = _liberty.GetPixel(xFunct, Mathf.RoundToInt(yFunct));
+                        if (color2.a == 0f) break;
+                        //color2.g += (_speedX.x / 255);
+                        color2.r += (_speedX.y / 255);
+                        //color2.b += 50;// (_jumpingForce/255);
+                        _liberty.SetPixel(xFunct, Mathf.RoundToInt(yFunct), color2);
+                        xFunct += inc;
+                        yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity /
+                                          (Mathf.Pow(Mathf.Cos(angle), 2) * Mathf.Pow(_jumpingForce, 2))) +
+                                 Mathf.Tan(angle) * (xFunct - startX) + startY;
+                    }
+
+                    //Todo: Air Control
+                    //Colorier toute l'intégrale avec gauche/droite
+
                 }
 
-                startX = x;
-                xFunct = startX;
-                startY = pixel.y-1;
-                yFunct = startY;
-                angleDeg = 135;
-                if (angleDeg > 90) inc = -1;
-                else inc = 1;
-                angle = angleDeg * Mathf.PI/180; //Radians !!
-                
-                //Debug.Log(xFunct+" ::: "+yFunct); //aff0
-                while (xFunct < _liberty.width && xFunct >= 0 && yFunct < _liberty.height && yFunct >=0)
-                {
-                    var color2 = _liberty.GetPixel(xFunct, Mathf.FloorToInt(yFunct));
-                    if (color2.a == 0f) break;
-                    //color2.g += (_speedX.x / 255);
-                    color2.r += (_speedX.y / 255);
-                    //color2.b += 50;// (_jumpingForce/255);
-                    _liberty.SetPixel(xFunct, Mathf.FloorToInt(yFunct), color2);
-                    xFunct+=inc;
-                    yFunct = -0.5f * (Mathf.Pow(xFunct - startX, 2) * _gravity / (Mathf.Pow(Mathf.Cos(angle),2)*Mathf.Pow(_jumpingForce,2))) + Mathf.Tan(angle) * (xFunct - startX) + startY;
-                }
+                saveX = Mathf.RoundToInt(x+1f);
+                saveY = Mathf.RoundToInt(y+1f);
 
-                //Todo: Air Control
-                //Colorier toute l'intégrale avec gauche/droite
-                
-                
-                
             }
             
             //Inertia
