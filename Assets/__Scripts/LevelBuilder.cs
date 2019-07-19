@@ -14,26 +14,32 @@ namespace __Scripts
         
         private GameObject _start;
 
-        public int levelSize;
+        [Range(10,30)] public int levelSize = 10;
         [Range(0,1)] public float CR = .5f;
         public Texture2D mapLiberty;
         public GameObject end;
-        public int blocSize;
+        private int _blocSize = Mathf.RoundToInt(512*0.2f);
         
 
         // Start is called before the first frame update
         private void Start()
         {
+            Debug.Log("Start of level building");
             _tilemap = GetComponent<Tilemap>();
             foreach(var t in GetComponentsInChildren<Transform>())
             {
                 if (t.gameObject.name.Equals("Start")) _start = t.gameObject;
             }
-            mapLiberty = new Texture2D(levelSize * blocSize, 20 * blocSize);
-            
-            var blocsArray =Resources.LoadAll<GameObject>("__Prefabs/Tiles");
-            var blocs = blocsArray.ToList();
-            
+            mapLiberty = new Texture2D(levelSize * _blocSize, 15 * _blocSize);
+            for (int i = 0; i < mapLiberty.width; i++)
+            {
+                for (int j = 0; j < mapLiberty.height; j++)
+                {
+                    mapLiberty.SetPixel(i,j,new Color(0,0,0,0.5f));
+                }
+            }
+            //mapLiberty.Apply();
+            var blocs =Resources.LoadAll<GameObject>("__Prefabs/Tiles");
             //Todo: Difficulté : courbe décroissante de la surface sans danger
             // %surface(position) = (1 - CR) * (levelSize - position) / levelSize
             // augmentation croissante de difficulté selon le Challenge Rating
@@ -41,13 +47,31 @@ namespace __Scripts
 
             var pos = _start.transform.position;
             var actualSize = 0;
+            var sector = 3; // On considère 3 cases entre le début du dernier bloc et la fin du secteur (2 blocs est le saut quasi pixel-perfect à plat)
             while (actualSize < levelSize)
             {
                 //todo: check surface of blue presence in sector
-                var percentile = .6f;
-                PlaceBloc(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y+1), percentile, Instantiate(blocs[Random.Range(0,blocs.Count-1)]));
+                var dangerArea = 0f;
+                var cpt = 0;
+                for (var i = pos.x; i < pos.x+sector; i++)
+                {
+                    for (var j = pos.y; j < pos.y+sector; j++)
+                    {
+                        dangerArea += CountBloc(i, j);
+                        cpt++;
+                    }
+                }
 
-                pos.y += 1;
+                dangerArea /= dangerArea / cpt;
+                
+                var targetPercentile = (actualSize*1f / levelSize) * CR;
+                var percentile = dangerArea - targetPercentile; 
+                
+                //instanciation
+                var bInst = Instantiate(blocs[Random.Range(0, blocs.Length)],this.transform);
+                
+                PlaceBloc(Mathf.FloorToInt(pos.x+1), Mathf.FloorToInt(pos.y), percentile, bInst);
+                pos.x += 1+percentile;
                 actualSize++;
             }
             FillDeathPits();
@@ -63,10 +87,27 @@ namespace __Scripts
                 for (var l = 0; l < liberty.height; l++)
                 {
                     var col = liberty.GetPixel(i, j);
-                    col += mapLiberty.GetPixel(i * blocSize + k + Mathf.FloorToInt((1-offset) * blocSize), j * blocSize + l + Mathf.FloorToInt((1-offset) * blocSize));
-                    mapLiberty.SetPixel(i * blocSize + k, j * blocSize + l, col);
+                    col += mapLiberty.GetPixel(i * _blocSize + k + Mathf.FloorToInt((1-offset) * _blocSize), j * _blocSize + l + Mathf.FloorToInt((1-offset) * _blocSize));
+                    mapLiberty.SetPixel(i * _blocSize + k + Mathf.FloorToInt((1-offset) * _blocSize), j * _blocSize + l + Mathf.FloorToInt((1-offset) * _blocSize), col);
                 }
             }
+            bloc.transform.position = new Vector3(i+offset,j,0);
+            //mapLiberty.Apply();
+        }
+        private float CountBloc(float i, float j)
+        {
+            var count = 0f;
+            var k = 0; var l = 0;
+            for (k = 0; k < _blocSize; k++)
+            {
+                for (l = 0; l < _blocSize; l++)
+                {
+                    var pix = mapLiberty.GetPixel(Mathf.FloorToInt(i) * _blocSize + k + Mathf.FloorToInt(_blocSize), Mathf.FloorToInt(j) * _blocSize + Mathf.FloorToInt(_blocSize));
+                    count += pix.b * pix.a;
+                }
+            }
+            //mapLiberty.Apply();
+            return count / (k*l);
         }
 
         private void FillDeathPits()
@@ -79,9 +120,18 @@ namespace __Scripts
                     if (pix.a != 0f)
                     {
                         pix.b += 50; // ARBITRAIRE ???
+                        mapLiberty.SetPixel(i,j, pix);
                     }
                     else break;
                 }
+            }
+            mapLiberty.Apply();
+        }
+        private void OnGUI()
+        {
+            if (mapLiberty)
+            {
+                GUI.DrawTexture(new Rect(new Vector2(0,0),new Vector2(mapLiberty.width,mapLiberty.height)), mapLiberty);
             }
         }
     }

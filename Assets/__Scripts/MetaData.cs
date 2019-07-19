@@ -88,12 +88,12 @@ namespace __Scripts
             
             _pointLeft+=new Vector2Int(offsetW,offsetH);
             _pointRight+=new Vector2Int(offsetW,offsetH);
-            Debug.Log(_pointLeft);
-            Debug.Log(_pointRight);
+            //Debug.Log(_pointLeft);
+            //Debug.Log(_pointRight);
             
             Vector2 differential = (_pointRight - _pointLeft);
             var differentialNorm = differential.normalized;
-            Debug.Log(differentialNorm);
+            //Debug.Log(differentialNorm);
             var pixel = _pointLeft;
             
             // Libertés basiques au sol
@@ -233,17 +233,18 @@ namespace __Scripts
             var vDroite = new Vector2();
 
             var curve = vDroite.x * maxJump;
-        }*/
-
+        }
+*/
         private void OnGUI()
         {
+            //Debug.Log("GUI of " + this.name + " : " + (_liberty != null));//aff0
             if (_liberty)
             {
                 GUI.DrawTexture(new Rect(new Vector2(0,0),new Vector2(500,500)), _liberty);
             }
         }
-
-        /*
+/*
+        
         public GameObject[] GetTilesInDir(char dir)
         {
             Debug.Log("Accès : " + name + " : " + dir);
