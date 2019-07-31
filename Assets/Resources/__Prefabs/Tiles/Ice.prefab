@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5505999473170903718}
   - component: {fileID: 5505999473170903721}
   - component: {fileID: 5505999473170903720}
-  - component: {fileID: 5505999473170903723}
+  - component: {fileID: 7708841111464740111}
   m_Layer: 0
   m_Name: Ice
   m_TagString: Untagged
@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _liberty: {fileID: 0}
---- !u!61 &5505999473170903723
-BoxCollider2D:
+--- !u!60 &7708841111464740111
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -118,6 +118,9 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 5.12, y: 5.12}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -2.56, y: 2.56}
+      - {x: -2.56, y: -2.56}
+      - {x: 2.56, y: -2.56}
+      - {x: 2.56, y: 2.56}
